@@ -1,16 +1,34 @@
+<!--
+	----------------------------------------------------------------------------------------------------------------------------------------------------- 
+	Version	| Date 			| Author							| Description
+	-----------------------------------------------------------------------------------------------------------------------------------------------------
+	001		| 6 March 2022	| Bhupendra Singh, UPES Dehradun	| Dobule Click to rotate about arbitrary(clicked point) point.
+			|				|									| Single click and slide to reflect about the line. (not working yet.)
+	-----------------------------------------------------------------------------------------------------------------------------------------------------
+-->
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>WebGL - Two Triangle Transform Program</title>
+		<title>WebGL - Matrix Multiplication</title>
+		<script language="JavaScript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.js"></script>
+
 	</head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<body onload="main()">
 		<canvas id="canvas" ondblclick="mouseHandler()" width="600" height="600">
 			Your browser does not support HTML5
 		</canvas>
+		<input type="number" min="-1" max="1" id="x1" placeholder="x1">
+		<input type="number" min="-1" max="1" id="y1" placeholder="y1">
+		<input type="number" min="-1" max="1" id="x2" placeholder="x2">
+		<input type="number" min="-1" max="1" id="y2" placeholder="y2">
+		<button type="button" onclick="reflect()" class="btn btn-primary">Reflect</button>
+
 		<br/>
 		<script>
 			var mouseX, mouseY;		
 			var gl, shaderProgram;
-			function main(){
+			
 				gl = initializeWebGL(gl);
 
 				//Step 1 (Set background color): First specify the color with the help of Quadlet(R,G,B,Alpha) and the clear the buffer related to background.
@@ -63,6 +81,9 @@
 				var GPU_T1 = gl.getUniformLocation(shaderProgram, 'GPU_T1');
 				var GPU_T2 = gl.getUniformLocation(shaderProgram, 'GPU_T2');
 				var GPU_T3 = gl.getUniformLocation(shaderProgram, 'GPU_T3');
+
+				var GPU_T4 = gl.getUniformLocation(shaderProgram, 'GPU_T4');
+				var GPU_T5 = gl.getUniformLocation(shaderProgram, 'GPU_T5');
 				
 				//Step 16 (Enable Vertex Attribute Array): It enables the pointer defined in Step 8 to access the vertex buffered data.
 				gl.enableVertexAttribArray(positionAttribLocation);
@@ -79,50 +100,93 @@
 				
 
 				//Step 18 (Draw the geometry): Issue the draw command to generate the geometry as defined by the indices and the type of primitive to create.
-				var angle = 90;
+				var angle = 0;
 				var radian = angle*(3.14/180);
-				var m = -0.4, n = -0.3;
+				var m = 0, n = 0;
 				var T1 = new Float32Array(16);
 				var T2 = new Float32Array(16);
 				var T3 = new Float32Array(16);
-
-				//T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-				T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	-m,-n,0,1];	//for translation
-				//T2 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-				T2 = [Math.cos(radian),Math.sin(radian),0,0,	-Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];	//for translation		
+				var T4 = new Float32Array(16);
+				var T5 = new Float32Array(16);
+			function main(){
 				
-				//T3 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-				T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	m,n,0,1];	//for translation
-
-				gl.uniformMatrix4fv(GPU_T1, gl.FALSE, T1);
-				gl.uniformMatrix4fv(GPU_T2, gl.FALSE, T2);
-				gl.uniformMatrix4fv(GPU_T3, gl.FALSE, T3);
-
+				mouseX = 0;
+				mouseY = 0;
 				animate();
-				
-				m = 0; n = 0;
+
 				function animate(){
 					m = -mouseX;
 					n = -mouseY;
 					gl.clear(gl.COLOR_BUFFER_BIT);
-					radian += 0.03;
-					//T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-					T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	-m,-n,0,1];	//for translation
-					//T2 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-					T2 = [Math.cos(radian),Math.sin(radian),0,0,	-Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];	//for translation		
+					angle += 0.03;
 					
-					//T3 = [1,0,0,0,		0,1,0,0,	0,0,1,0, 0,0,0,1];	//for translation
-					T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	m,n,0,1];	//for translation
+					//T1 = getIdentity();
+					T1 = getTranslationMatrix(-m,-n);
+					T2 = getRotationMatrix(angle);
+					//T3 = getIdentity();
+					T3 = getTranslationMatrix(m,n);
+					T4 = getIdentity();
+					T5 = getIdentity();
 
 					gl.uniformMatrix4fv(GPU_T1, gl.FALSE, T1);
 					gl.uniformMatrix4fv(GPU_T2, gl.FALSE, T2);
 					gl.uniformMatrix4fv(GPU_T3, gl.FALSE, T3);
+					gl.uniformMatrix4fv(GPU_T4, gl.FALSE, T4);
+					gl.uniformMatrix4fv(GPU_T5, gl.FALSE, T5);
 					
 					gl.drawElements(gl.TRIANGLES, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
 					requestAnimationFrame(animate);
 				}
+			}
+			function reflect(){
+				var x1 = document.getElementById("x1").value;
+				var y1 = document.getElementById("y1").value;
+				var x2 = document.getElementById("x2").value;
+				var y2 = document.getElementById("y2").value;
+					
+				m = (y2-y1)/(x2-x1);
+				var angle = Math.atan(m);
+				var c;
+				if(x1 == x2)
+					c = y2-y1
+				else
+					c = y1 - m*x1;
 
+				angle = angle * 180/Math.PI;
+				T1 = getTranslationMatrix(0, c);
+				T2 = getRotationMatrix(-angle);
+				T3 = getReflectionX();
+				T4 = getRotationMatrix(angle);
+				T5 = [1,0,0,0, 0,1,0,-c, 0,0,1,0, 0,0,0,1];
+				
+				gl.uniformMatrix4fv(GPU_T1, gl.FALSE, T1);
+				gl.uniformMatrix4fv(GPU_T2, gl.FALSE, T2);
+				gl.uniformMatrix4fv(GPU_T3, gl.FALSE, T3);
+				gl.uniformMatrix4fv(GPU_T4, gl.FALSE, T4);
+				gl.uniformMatrix4fv(GPU_T5, gl.FALSE, T5);
+				gl.clear(gl.COLOR_BUFFER_BIT);
 				gl.drawElements(gl.TRIANGLES, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
+				console.log(angle);
+				console.log(c);
+			}
+			function getIdentity(){
+				return [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
+			}
+			function getRotationMatrix(angle){
+				var radian = angle * Math.PI/3.14;
+				var R = new Float32Array(16);
+				R = [Math.cos(radian),Math.sin(radian),0,0,	-Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];
+				return R;
+			}
+			function getTranslationMatrix(m, n){
+				var T = new Float32Array(32);
+				T = [1,0,0,0, 0,1,0,0, 0,0,1,0, m,n,0,1];
+				return T;
+			}
+			function getReflectionX(){
+				var Ref = new Float32Array(32);
+				Ref = [1,0,0,0, 0,-1,0,0, 0,0,1,0, 0,0,0,1];
+				return Ref;
 			}
 			function initializeWebGL(gl)
 			{
@@ -155,9 +219,11 @@
 				' uniform mat4 GPU_T1; ' +
 				' uniform mat4 GPU_T2; ' +
 				' uniform mat4 GPU_T3; ' +
+				' uniform mat4 GPU_T4; ' +
+				' uniform mat4 GPU_T5; ' +
 				' void main() ' +
 				' { ' +
-				'		gl_Position = GPU_T1 * GPU_T2 * GPU_T3 * vec4(geometryCoordinatesGPU, 0.0, 1.0); ' +
+				'		gl_Position = GPU_T1 * GPU_T2 * GPU_T3 * GPU_T4 * GPU_T5 * vec4(geometryCoordinatesGPU, 0.0, 1.0); ' +
 				' } ';
 
 				//Step 8 (Create actual vertex shader): Create the actual vertex shader with the text defined in Step 1.
