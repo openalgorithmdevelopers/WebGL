@@ -3,7 +3,7 @@
 		<title>WebGL - Two Triangle Transform Program</title>
 	</head>
 	<body>
-		<canvas id="canvas"  width="1200" height="600">
+		<canvas id="canvas"  width="600" height="600">
 			Your browser does not support HTML5
 		</canvas>
 		<br/>
@@ -18,15 +18,18 @@
 		//Note: The default background color in WebGl is white.
 
 		//Step 2 (Speficy vertices data): Speficy the coordinates (X,Y,Z) of the geometry and other information related to each coordinates.
-		var verticesDataArrayJS = 
-		[	// X, Y, Z           
-			-0.3, 0.7, 0,   //A
-			0.3, 0.7, 0, 	//B
-			0, 0, 0,		//C
-			0.3, -0.7, 0, 	//D
-			-0.3, -0.7, 0  	//E
-		];  
-
+		// var verticesDataArrayJS = 
+		// [	// X, Y, Z           
+		// 	-0.3, 0.7, 0,   //A
+		// 	0.3, 0.7, 0, 	//B
+		// 	0, 0, 0,		//C
+		// 	0.3, -0.7, 0, 	//D
+		// 	-0.3, -0.7, 0  	//E
+		// ];  
+		var verticesDataArrayJS = [0.2, 0.2, 0,
+									0.6, 0.2, 0,
+									0.4, 0.5, 0
+								];
 		//Step 3 (Specify how to connect the points): Specify the order with which the coordinates defined in Step2 will be joined.
 		var IndicesArrayJS =
 		[
@@ -75,7 +78,7 @@
 		
 
 		//Step 18 (Draw the geometry): Issue the draw command to generate the geometry as defined by the indices and the type of primitive to create.
-		var angle = 45;
+		var angle = 0;
 		var radian = angle*(3.14/180);
 		var Sx = 0.5, Sy = 0.5;
 		var m = 0.5, n = 0.5;
@@ -83,12 +86,12 @@
 		var T2 = new Float32Array(16);
 		var T3 = new Float32Array(16);
 
-		//T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	-0.5,-0.5,0,1];	//for translation
-		T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	1,1,0,1];	//for translation
-		T2 = [Math.cos(radian),Math.sin(radian),0,0,	-Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];	//for translation
+		T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	0.4,0.4,0,1];	//for translation
+		//T1 = [1,0,0,0,		0,1,0,0,	0,0,1,0,	-0.4,-0.4,0,1];	//for translation
+		T2 = [Math.cos(radian),-Math.sin(radian),0,0,	Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];	//for translation
 		//T2 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	0,0,0,1];	//for translation
-		//T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	0.5,0.5,0,1];	//for translation
-		T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	-1,-1,0,1];	//for translation
+		//T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	0.4,0.4,0,1];	//for translation
+		T3 = [1,0,0,0,	0,1,0,0,	0,0,1,0,	-0.4,-0.4,0,1];	//for translation
 
 		//tranArrayJS = [Math.cos(radian),-Math.sin(radian),0,0,	Math.sin(radian),Math.cos(radian),0,0,	0,0,1,0,	0,0,0,1];	//for rotation
 		//tranArrayJS = [Sx,0,0,0,		0,Sy,0,0,	0,0,1,0,	0,0,0,1];	//for scaling
@@ -104,8 +107,8 @@
 		{
 			var canvas = document.getElementById('canvas');
 
-			canvas.width = window.innerWidth;;
-			canvas.height = window.innerHeight;;
+			//canvas.width = window.innerWidth;;
+			//canvas.height = window.innerHeight;;
 
 			gl = canvas.getContext('webgl');
 
