@@ -22,9 +22,9 @@
 		<script>
             var gl;
             var program;
-            var lineX = 1;
-            var lineY = 0;
-            var lineZ = 0;
+            var axisX = 1;
+            var axisY = 0;
+            var axisZ = 0;
 
             var InitDemo = function () {
                 
@@ -183,7 +183,7 @@
                 mat4.identity(identityMatrix);
                 var loop = function () {
                     angle = angle + 0.02;
-                    mat4.rotate(tranArrayJS, identityMatrix, angle, [lineX, lineY, lineZ]); //Rotation around standard X
+                    mat4.rotate(tranArrayJS, identityMatrix, angle, [axisX, axisY, axisZ]); //Rotation around standard X
                     //mat4.rotate(tranArrayJS, identityMatrix, angle, [1, 0, 0]); //Rotation around standard X
                     //mat4.rotate(tranArrayJS, identityMatrix, angle, [0, 1, 0]);   //Rotation around standard Y
                     //mat4.rotate(tranArrayJS, identityMatrix, angle, [0, 0, 1]);   ////Rotation around standard Z
@@ -248,19 +248,19 @@
                 return gl;
             }
             function setXAxis(){
-                lineX = 1;
-                lineY = 0;
-                lineZ = 0;
+                axisX = 1;
+                axisY = 0;
+                axisZ = 0;
             }
             function setYAxis(){
-                lineX = 0;
-                lineY = 1;
-                lineZ = 0;
+                axisX = 0;
+                axisY = 1;
+                axisZ = 0;
             }
             function setZAxis(){
-                lineX = 0;
-                lineY = 0;
-                lineZ = 1;
+                axisX = 0;
+                axisY = 0;
+                axisZ = 1;
             }
         </script>
     </body>
