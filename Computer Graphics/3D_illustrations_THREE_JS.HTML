@@ -1,3 +1,6 @@
+<!--
+    11-March-22 !   Bhupendra Singh     ! CG Illustration for Standard Rotation.
+-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,49 +13,106 @@
 </head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <body>
-<div id="Original" class="p-20 w-25 bg-primary"></div>
-<div id="Result"></div>
+    <div class="body">
+        <div id="header">
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand h1" href="#">Computer Graphics Fundamentals Illustrations</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active" href="#">To be added <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="#">To be added</a>
+                        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                    </div>
+                </div>
+            </nav> -->
+        </div>        
+        <div id="WebGL_output" class="container">
+            <div class="row col-lg-12 h1 text-center font-weight-bold text-info">
+                <b>Standard Rotations in Computer Graphics Fundamentals</b>
+            </div>
+            <div class="row">
+                <div id="Original" class="col-lg-6 h1 text-primary text-center font-weight-bold">Original Geometry.</div>
+                <div id="Result1" class="col-lg-6 h1 text-success text-center font-weight-bold">After Rotation around X.</div>
+            </div>
+            <div class="row">
+                <div id="Result2" class="col-lg-6 h1 text-success text-center font-weight-bold">After Rotation around Y.</div>
+                <div id="Result3" class="col-lg-6 h1 text-success text-center font-weight-bold">After Rotation around Z.</div>
+            </div>
+        </div>
+    </div>
 <script>
     function init() {
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        //var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.OrthographicCamera( window.innerHeight / - 20, window.innerHeight / 20, window.innerHeight / 20, window.innerHeight / - 20, 1, 100 );
         
         var renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor(new THREE.Color(0xEEEEEE));
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(new THREE.Color(0x000000));
+        renderer.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer2 = new THREE.WebGLRenderer();
+        renderer2.setClearColor(new THREE.Color(0x000000));
+        renderer2.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer3 = new THREE.WebGLRenderer();
+        renderer3.setClearColor(new THREE.Color(0x000000));
+        renderer3.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer4 = new THREE.WebGLRenderer();
+        renderer4.setClearColor(new THREE.Color(0x000000));
+        renderer4.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
 
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enableDamping = true;
 		controls.dampingFactor = 0.25;
 		controls.enableZoom = true;
 
-        // show axes in the screen
-        var axes = new THREE.AxesHelper(40);    
+        var axes = new THREE.AxesHelper(60);    
         scene.add(axes);
 
-        const geometry = new THREE.BoxGeometry( 15, 10, 10 );
+        const geometry = new THREE.BoxGeometry( 20, 5, 15 );
         const material = new THREE.MeshBasicMaterial( {color: 0x00FFFF} );
         const cube = new THREE.Mesh( geometry, material );
-        cube.position.x = 15;
-        cube.position.y = 15;
-        cube.position.z = 15;
+        cube.position.x = 0;
+        cube.position.y = 0;
+        cube.position.z = 0;
         scene.add( cube );
 
         camera.position.x = 30;
         camera.position.y = 40;
-        camera.position.z = 100;
+        camera.position.z = 80;
         camera.lookAt(scene.position);
 
         document.getElementById("Original").appendChild(renderer.domElement);
-        document.getElementById("Result").appendChild(renderer.domElement);
-        renderer.render(scene, camera);
+        document.getElementById("Result1").appendChild(renderer2.domElement);
+        document.getElementById("Result2").appendChild(renderer3.domElement);
+        document.getElementById("Result3").appendChild(renderer4.domElement);        
+        
         animate();
-
+        var angle = 0;
+        var xRotation, yRotation, zRotation;
         function animate()
         {
+            angle += 0.1;
             controls.update();
             requestAnimationFrame ( animate );  
             renderer.render (scene, camera);
+
+            cube.rotation.x = angle;
+            renderer2.render (scene, camera);
+
+            cube.rotation.x = 0;
+            cube.rotation.y = angle;
+            renderer3.render (scene, camera);
+
+            cube.rotation.y = 0;
+            cube.rotation.z = angle;
+            renderer4.render (scene, camera);
+
+            cube.rotation.z = 0;
         }
     }
     window.onload = init;
