@@ -1,0 +1,120 @@
+<!--
+    11-March-22 !   Bhupendra Singh     ! CG Illustration for Standard Rotation.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D CG Fundamentals Illustrations</title>
+    <script src="three_min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <style>
+        
+    </style>
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<body>
+    <div class="body">
+        <div id="header">
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand h1" href="#">Computer Graphics Fundamentals Illustrations</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active" href="#">To be added <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="#">To be added</a>
+                        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                    </div>
+                </div>
+            </nav> -->
+        </div>        
+        <div id="WebGL_output" class="container">
+            <div class="row col-lg-12 h1 text-center font-weight-bold text-info">
+                <b>Standard Reflection in Computer Graphics Fundamentals</b>
+            </div>
+            <div class="row">
+                <div id="Original" class="col-lg-6 h1 text-primary text-center font-weight-bold">Original Geometry</div>
+                <div id="Result1" class="col-lg-6 h1 text-success text-center font-weight-bold">After Reflection around XY</div>
+            </div>
+            <div class="row">
+                <div id="Result2" class="col-lg-6 h1 text-success text-center font-weight-bold">After Reflection around YZ</div>
+                <div id="Result3" class="col-lg-6 h1 text-success text-center font-weight-bold">After Reflection around XZ</div>
+            </div>
+        </div>
+    </div>
+<script>
+    function init() {
+        var scene = new THREE.Scene();
+        //var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.OrthographicCamera( window.innerHeight / - 20, window.innerHeight / 20, window.innerHeight / 20, window.innerHeight / - 20, 0.1, 100 );
+        
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(new THREE.Color(0x000000));
+        renderer.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer2 = new THREE.WebGLRenderer();
+        renderer2.setClearColor(new THREE.Color(0x000000));
+        renderer2.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer3 = new THREE.WebGLRenderer();
+        renderer3.setClearColor(new THREE.Color(0x000000));
+        renderer3.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var renderer4 = new THREE.WebGLRenderer();
+        renderer4.setClearColor(new THREE.Color(0x000000));
+        renderer4.setSize(window.innerWidth*0.4, window.innerHeight*0.6);
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enableDamping = true;
+		controls.dampingFactor = 0.25;
+		controls.enableZoom = true;
+
+        var axes = new THREE.AxesHelper(60);    
+        scene.add(axes);
+
+        const geometry = new THREE.BoxGeometry( 15, 3, 10 );
+        const material = new THREE.MeshBasicMaterial( {color: 0x00FFFF} );
+        const cube = new THREE.Mesh( geometry, material );
+        cube.position.x = 10;
+        cube.position.y = 10;
+        cube.position.z = 10;
+        scene.add( cube );
+
+        camera.position.x = 30;
+        camera.position.y = 40;
+        camera.position.z = 80;
+        camera.lookAt(scene.position);
+
+        document.getElementById("Original").appendChild(renderer.domElement);
+        document.getElementById("Result1").appendChild(renderer2.domElement);
+        document.getElementById("Result2").appendChild(renderer3.domElement);
+        document.getElementById("Result3").appendChild(renderer4.domElement);  
+        
+        renderer.render (scene, camera);
+
+        cube.position.z *= -1;  //Reflection about XY plane
+        renderer2.render (scene, camera);
+
+        cube.position.z *= -1;  //Discarding the previous reflection
+        cube.position.x *= -1;  //Reflection about YZ plane
+        renderer3.render (scene, camera);
+
+        cube.position.x *= -1;  //Discarding the previous reflection
+        cube.position.y *= -1;  //Reflection about XZ plane
+        renderer4.render (scene, camera);
+
+        cube.position.y *= -1;  //Discarding the previous reflection
+        
+        animate();
+        function animate()
+        {
+            controls.update();
+            requestAnimationFrame ( animate );  
+            renderer.render (scene, camera);
+        }
+    }
+    window.onload = init;
+</script>
+</body>
+</html>
