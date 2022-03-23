@@ -1,0 +1,89 @@
+<!--
+    11-March-22 !   Bhupendra Singh     ! CG Illustration for Standard Rotation.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D CG Fundamentals Illustrations</title>
+    <script src="three_min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <style>
+        
+    </style>
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<body>
+    <div class="body">
+        <div id="header">
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand h1" href="#">Computer Graphics Fundamentals Illustrations</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active" href="#">To be added <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="#">To be added</a>
+                        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                    </div>
+                </div>
+            </nav> -->
+        </div>        
+        <div id="WebGL_output" class="container">
+            <div class="row col-lg-12 h1 text-center font-weight-bold text-info">
+                <b>Arbitrary Rotation in CGF</b>
+            </div>
+            <div class="row">
+                <div id="Original" class="col-lg-12 h1 text-primary text-center font-weight-bold">Original Geometry</div>
+            </div>
+        </div>
+    </div>
+<script>
+    function init() {
+        var scene = new THREE.Scene();
+        //var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.OrthographicCamera( window.innerHeight / - 20, window.innerHeight / 20, window.innerHeight / 20, window.innerHeight / - 20, 0.1, 100 );
+        
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(new THREE.Color(0x000000));
+        renderer.setSize(window.innerWidth*0.9, window.innerHeight*0.9);
+        document.getElementById("Original").appendChild(renderer.domElement);
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enableDamping = true;
+		controls.dampingFactor = 0.25;
+		controls.enableZoom = true;
+
+        var axes = new THREE.AxesHelper(60);    
+        scene.add(axes);
+
+        camera.position.x = 30;
+        camera.position.y = 40;
+        camera.position.z = 80;
+        camera.lookAt(scene.position);
+        const points = [];
+        const material = new THREE.LineBasicMaterial({
+            color: 0xFF00ff
+        });
+        //points.push( new THREE.Vector3( 5, 5, 5 ) );
+        points.push( new THREE.Vector3( 0, 0, 0 ) );
+        points.push( new THREE.Vector3( 10, 20, 10 ) );
+        // points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+        const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+        const line = new THREE.Line( geometry, material );
+        scene.add( line );
+        
+        animate();
+        function animate()
+        {
+            controls.update();
+            requestAnimationFrame ( animate );  
+            renderer.render (scene, camera);
+        }
+    }
+    window.onload = init;
+</script>
+</body>
+</html>

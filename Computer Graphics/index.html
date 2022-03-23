@@ -1,0 +1,90 @@
+<!--
+    11-March-22 !   Bhupendra Singh     ! CG Illustration for Standard Rotation.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3D CG Fundamentals Illustrations</title>
+    <script src="three_min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <style></style>
+  </head>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous"
+  />
+  <body>
+    <div id="WebGL_output" class="container-fluid">
+      <div id="Original"></div>
+    </div>
+    <script>
+      var angle = 0;
+      var x, y, z;
+      function init() {
+        var scene = new THREE.Scene();
+        //var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.OrthographicCamera(
+          window.innerHeight / -20,
+          window.innerHeight / 20,
+          window.innerHeight / 20,
+          window.innerHeight / -20,
+          1,
+          100
+        );
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(new THREE.Color(0x000000));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
+
+        var axes = new THREE.AxesHelper(60);
+        scene.add(axes);
+
+        const geometry = new THREE.BoxGeometry(20, 5, 15);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.x = 0;
+        cube.position.y = 0;
+        cube.position.z = 0;
+        scene.add(cube);
+
+        camera.position.x = 30;
+        camera.position.y = 40;
+        camera.position.z = 80;
+        camera.lookAt(scene.position);
+
+        document.getElementById("Original").appendChild(renderer.domElement);
+
+        animate();
+
+        var xRotation, yRotation, zRotation;
+        var angle = 0;
+        function animate() {
+          //angle += 0.1;
+          controls.update();
+          requestAnimationFrame(animate);
+          renderer.render(scene, camera);
+
+          //cube.rotation.z = angle;
+          cube.rotation.x = (x * 3.14) / 180;
+          cube.rotation.y = (y * 3.14) / 180;
+          cube.rotation.z = (z * 3.14) / 180;
+        }
+      }
+      function handleOrientation(event) {
+        x = event.beta; // In degree in the range [-180,180)
+        y = event.gamma; // In degree in the range [-90,90)
+        z = event.alpha;
+        //angle = x;
+      }
+      window.onload = init;
+      window.addEventListener("deviceorientation", handleOrientation);
+    </script>
+  </body>
+</html>
