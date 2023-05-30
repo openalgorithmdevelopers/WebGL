@@ -11,9 +11,9 @@ var WebGL = function () {
 	//Step 2 (Speficy vertices data): Speficy the coordinates (X,Y,Z) of the geometry and the color information related to each coordinates.
 	var verticesDataArrayJS = 
 	[	//X 	Y 		Z      	R  G  B       
-		0.0, 	0.8, 	0,   	1, 0, 0, 	//Vertex A
+		0.0, 	0.8, 	0,   	0, 1, 0, 	//Vertex A
 		0.8, 	-0.8, 	0, 		0, 1, 0,	//Vertex B
-		-0.8, 	-0.8, 	0, 		0, 0, 1		//Vertex C
+		-0.8, 	-0.8, 	0, 		0, 1, 		//Vertex C
 	];  
 
 	//Step 3 (Specify how to connect the points): Specify the order with which the coordinates defined in Step2 will be joined.

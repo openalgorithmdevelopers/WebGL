@@ -4,7 +4,7 @@ var WebGL = function () {
 	gl = initializeWebGL(gl);
 
 	//Step 1 (Set background color): First specify the color with the help of Quadlet(R,G,B,Alpha) and the clear the buffer related to background.
-	gl.clearColor(0, 0, 0, 1.0);	
+	gl.clearColor(0.5, 0, 0, 1.0);	
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	//Note: The default background color in WebGl is white.
 
@@ -71,7 +71,7 @@ var WebGL = function () {
 	//gl.drawElements(gl.LINES, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
 	//gl.drawElements(gl.LINE_STRIP, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
 	//gl.drawElements(gl.LINE_LOOP, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
-	gl.drawElements(gl.TRIANGLES, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
+	gl.drawElements(gl.LINES, IndicesArrayJS.length, gl.UNSIGNED_SHORT, 0);
 };
 
 function initializeWebGL(gl)
@@ -97,6 +97,7 @@ function getShaderProgram(gl)
 		void main()
 		{
 			gl_Position = vec4(geometryCoordinatesGPU, 1.0); 
+			gl_PointSize = 5.0;
 		}`;
 
 	//Step 8 (Create actual vertex shader): Create the actual vertex shader with the text defined in Step 1.
